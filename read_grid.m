@@ -1,7 +1,7 @@
-function mesh = load_mesh(mesh_file)
+function grid = read_grid(grid_file)
     
 
-    file=fopen(mesh_file,'r');
+    file=fopen(grid_file,'r');
     
     eps=1e-6;
     vertices=[];
@@ -192,15 +192,15 @@ function mesh = load_mesh(mesh_file)
         unique_edges(11,i)=r(3);
     end
     
-    mesh={};
-    mesh.N_vertices=N_vertices;
-    mesh.N_faces=N_faces;
-    mesh.vertices=vertices;
-    mesh.faces=faces;
-    mesh.faces=faces;
-    mesh.N_edges=N_unique_edges;
-    mesh.edges=unique_edges;
-    mesh.faces_type=faces_type;
-    mesh.faces_area=faces_area;
-    mesh.faces_centres=faces_centres;
+    grid={};
+    grid.N_vertices=N_vertices;
+    grid.N_faces=N_faces;
+    grid.vertices=vertices;
+    grid.faces=faces;
+    grid.faces=faces;
+    grid.N_edges=N_unique_edges;
+    grid.edges=unique_edges;
+    grid.faces_type=faces_type;
+    grid.faces_area=faces_area;
+    grid.faces_centres=faces_centres;
 end

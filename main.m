@@ -10,15 +10,15 @@ clc;
 case_name='dam_coarse_roe/dam';
 % case_name='dam_fine/dam';
 
-mesh=load_mesh(sprintf('%s.stl',case_name));
+grid=read_grid(sprintf('%s.stl',case_name));
 
 % Conserative variables and simulation settings
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Q=zeros(3,mesh.N_faces);
+Q=zeros(3,grid.N_faces);
 
 N_timesteps=500;
-output_frequency=1;
+output_frequency=100;
 flux='roe'; %lax or roe
 t=0;
 dt=0.003;
@@ -28,8 +28,8 @@ g=9.08665;
 % Initial conditions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-for i=1:mesh.N_faces
-    x=mesh.faces_centres(i,1);
+for i=1:grid.N_faces
+    x=grid.faces_centres(i,1);
     if x <= -0.3
         Q(1,i)=1.5;
         Q(2,i)=0;
@@ -46,9 +46,9 @@ end
 
 figure(1);
 hold on;
-patch('Faces',mesh.faces,'Vertices',mesh.vertices,'FaceVertexCData',mesh.faces_type,'FaceColor','flat','EdgeColor','black','Clipping','off');
-quiver3(mesh.edges(9,:),mesh.edges(10,:),mesh.edges(11,:),mesh.edges(5,:),mesh.edges(6,:),mesh.edges(7,:));
-grid on;
+patch('Faces',grid.faces,'Vertices',grid.vertices,'FaceVertexCData',grid.faces_type,'FaceColor','flat','EdgeColor','black','Clipping','off');
+quiver3(grid.edges(9,:),grid.edges(10,:),grid.edges(11,:),grid.edges(5,:),grid.edges(6,:),grid.edges(7,:));
+
 axis equal;
 colormap jet;
 colorbar;
@@ -56,8 +56,8 @@ drawnow;
 
 figure(2);
 hold on;
-patch_plot=patch('Faces',mesh.faces,'Vertices',mesh.vertices,'FaceVertexCData',Q(1,:)','FaceColor','flat','EdgeColor','none','Clipping','off');
-grid on;
+patch_plot=patch('Faces',grid.faces,'Vertices',grid.vertices,'FaceVertexCData',Q(1,:)','FaceColor','flat','EdgeColor','none','Clipping','off');
+
 axis equal;
 colormap jet;
 colorbar;
@@ -68,16 +68,17 @@ for n=1:N_timesteps
     fprintf('Starting timestep %i\n',n);
     
     %Set cell residuals to 0
-    R=zeros(3,mesh.N_faces);
+    R=zeros(3,grid.N_faces);
 
-    for i=1:mesh.N_edges
+    % Flux calculation
+    for i=1:grid.N_edges
 
-        el=mesh.edges(3,i);
-        er=mesh.edges(4,i);
-        nx=mesh.edges(5,i);
-        ny=mesh.edges(6,i);
-        nz=mesh.edges(7,i);
-        l=mesh.edges(8,i);
+        el=grid.edges(3,i);
+        er=grid.edges(4,i);
+        nx=grid.edges(5,i);
+        ny=grid.edges(6,i);
+        nz=grid.edges(7,i);
+        l=grid.edges(8,i);
 
         %Left conservative variables
         Ql=Q(:,el);
@@ -200,8 +201,8 @@ for n=1:N_timesteps
     % Time integration
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    for i=1:mesh.N_faces
-        Q(:,i)=Q(:,i)-dt/mesh.faces_area(i)*R(:,i);
+    for i=1:grid.N_faces
+        Q(:,i)=Q(:,i)-dt/grid.faces_area(i)*R(:,i);
     end
     
     t=t+dt;
@@ -210,7 +211,7 @@ for n=1:N_timesteps
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if output_frequency>0
         if mod(n,output_frequency)==0
-            write_results(mesh,Q,R,n,case_name)
+            write_results(grid,Q,R,n,case_name)
         end
     end
     set(patch_plot,'FaceVertexCData',Q(1,:)');
