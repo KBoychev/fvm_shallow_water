@@ -46,8 +46,8 @@ end
 
 figure(1);
 hold on;
-patch('Faces',mesh.faces,'Vertices',mesh.vertices,'FaceVertexCData',mesh.faces_type,'FaceColor','flat','EdgeColor','none','Clipping','off');
-quiver(mesh.faces(9,:),mesh.faces(10,:),mesh.faces(11,:),mesh.faces(5,:),mesh.faces(6,:),mesh.faces(7,:));
+patch('Faces',mesh.faces,'Vertices',mesh.vertices,'FaceVertexCData',mesh.faces_type,'FaceColor','flat','EdgeColor','black','Clipping','off');
+quiver3(mesh.edges(9,:),mesh.edges(10,:),mesh.edges(11,:),mesh.edges(5,:),mesh.edges(6,:),mesh.edges(7,:));
 grid on;
 axis equal;
 colormap jet;
