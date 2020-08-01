@@ -17,7 +17,9 @@ The code solves the following partial differential equation
 where
 
 ![Vector of conserved variables](https://render.githubusercontent.com/render/math?math=Q=\{h,hu,hv\}^T "Vector of conserved variables")
+
 ![Flux in x-direction](https://render.githubusercontent.com/render/math?math=F_{x}=\{hu,hu^2+\frac{1}{2}gh^2,huv\}^T "Flux in x-direction")
+
 ![Flux in y-direction](https://render.githubusercontent.com/render/math?math=F_{y}=\{hv,hvu,hv^2+\frac{1}{2}gh^2\}^T "Flux in y-direction")
 
 
