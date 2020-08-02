@@ -6,7 +6,7 @@ COMPILER_FLAGS = -O2 -std=c++11 -flto -fopenmp
 SOURCES = $(wildcard ./includes/*.cpp)
 OBJECTS = $(patsubst ./includes/%.cpp,./bin/%.o,$(SOURCES))
  
-all: sw_solver clean
+all: sw_solver 
 	
 sw_solver: $(OBJECTS) ./bin/solver.o
 	$(COMPILER) $(COMPILER_FLAGS) $(OBJECTS) ./bin/solver.o -o ./bin/sw_solver

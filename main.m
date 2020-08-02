@@ -79,7 +79,7 @@ for n=1:N_timesteps
         ny=grid.edges(6,i);
         nz=grid.edges(7,i);
         l=grid.edges(8,i);
-
+        
         %Left conservative variables
         Ql=Q(:,el);
         

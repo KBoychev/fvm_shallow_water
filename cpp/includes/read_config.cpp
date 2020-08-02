@@ -17,6 +17,7 @@ void read_config(sw &sw)
         sw.N_cells = 0;
         sw.output_frequency = 0;
         sw.riemann_solver = 0;
+        sw.integrator = 0;
 
         while (std::getline(sw.file, file_line))
         {
@@ -61,6 +62,16 @@ void read_config(sw &sw)
                     if (sw.output_frequency < 0)
                     {
                         std::cout << "Output frequency (output_frequency) must be 0 or greater!" << std::endl;
+                        std::exit(-1);
+                    }
+                }
+                if (file_line_match[1].compare("integrator") == 0)
+                {
+                    sw.integrator = std::stoi(file_line_match[2]);
+
+                    if (sw.integrator != 0 && sw.integrator != 1 && sw.integrator != 2)
+                    {
+                        std::cout << "Integrator (integrator) must be 0,1, or 2!" << std::endl;
                         std::exit(-1);
                     }
                 }

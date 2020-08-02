@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 	std::cout << "N_timesteps = " << sw.N_timesteps << std::endl;
 	std::cout << "output_frequency = " << sw.output_frequency << std::endl;
 	std::cout << "riemann_solver = " << sw.riemann_solver << std::endl;
+	std::cout << "integrator = " << sw.integrator << std::endl;
 	std::cout << std::endl;
 
 	// Read grid
@@ -43,6 +44,10 @@ int main(int argc, char *argv[])
 	//Set initial conditions
 	////////////////////////////////////////////////////////////////////
 
+	Eigen::VectorXd Q, Q_tmp, k1, k2, k3, k4;
+
+	Q = Eigen::VectorXd::Zero(3 * sw.N_cells);
+
 	for (int i = 0; i < sw.N_cells; i++)
 	{
 		if (sw.cells[i].r[0] <= -0.3)
@@ -57,6 +62,10 @@ int main(int argc, char *argv[])
 			sw.cells[i].Q(1) = 0;
 			sw.cells[i].Q(2) = 0;
 		}
+
+		Q(3 * i) = sw.cells[i].Q(0);
+		Q(3 * i + 1) = sw.cells[i].Q(1);
+		Q(3 * i + 2) = sw.cells[i].Q(2);
 	}
 
 	// Run time loop
@@ -71,57 +80,27 @@ int main(int argc, char *argv[])
 
 		std::cout << "Step " << n << ", t=" << t << std::endl;
 
-		// Set cell residuals to 0
-		for (int i = 0; i < sw.N_cells; i++)
+		if (sw.integrator == 0) //Euler 1st-order integration
 		{
-			sw.cells[i].R(0) = 0;
-			sw.cells[i].R(1) = 0;
-			sw.cells[i].R(2) = 0;
+			Q += sw.dt * residual(sw, Q);
 		}
-
-		// Flux calculation
-		// #pragma omp parallel for
-		for (int i = 0; i < sw.N_edges; i++)
+		if (sw.integrator == 1) //Runge-kutta 2nd-order integration
 		{
-			int celll, cellr;
-			double l;
-			Eigen::Vector3d n, Ql, Qr, delta, F;
-
-			celll = sw.edges[i].celll;
-			cellr = sw.edges[i].cellr;
-			n = sw.edges[i].n;
-			l = sw.edges[i].l;
-
-			// Left conservative variables
-			Ql = sw.cells[celll].Q;
-
-			// Right conservative variables
-			if (cellr != -1) // Check if right cell exists
-			{
-				Qr = sw.cells[cellr].Q;
-			}
-			else
-			{
-				Qr = Ql;
-				Qr(1) = -Qr(1);
-				Qr(2) = -Qr(2);
-			}
-
-			F = flux(Ql, Qr, n, sw.riemann_solver);
-
-			// Subtract flux from left cell
-			sw.cells[celll].R -= F * l;
-			if (cellr != -1) // Check if right cell exists
-			{
-				// Add flux to right cell
-				sw.cells[cellr].R += F * l;
-			}
+			k1 = sw.dt * residual(sw, Q);
+			Q_tmp = Q + k1 / 2.0;
+			k2 = sw.dt * residual(sw, Q_tmp);
+			Q += k2;
 		}
-
-		// Time integration
-		for (int i = 0; i < sw.N_cells; i++)
+		if (sw.integrator == 2) //Runge-kutta 4th-order integration
 		{
-			sw.cells[i].Q -= (sw.dt / sw.cells[i].S) * sw.cells[i].R;
+			k1 = sw.dt * residual(sw, Q);
+			Q_tmp = Q + k1 / 2.0;
+			k2 = sw.dt * residual(sw, Q_tmp);
+			Q_tmp = Q + k2 / 2.0;
+			k3 = sw.dt * residual(sw, Q_tmp);
+			Q_tmp = Q + k3;
+			k4 = sw.dt * residual(sw, Q_tmp);
+			Q += 1.0 / 6.0 * (k1 + 2.0 * k2 + 2.0 * k3 + k4);
 		}
 
 		t += sw.dt;

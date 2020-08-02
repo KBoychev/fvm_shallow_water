@@ -6,8 +6,10 @@
 #include <string>
 #include <sstream>
 #include <regex>
+#include <algorithm>
 #include <Eigen/Dense>
 
+#include "edge.h"
 #include "cell.h"
 
 //Solver structure
@@ -22,6 +24,7 @@ struct sw
     std::vector<cell> cells;
     int output_frequency;
     int riemann_solver;
+    int integrator;
     std::vector<edge> edges;
     std::vector<Eigen::Vector3d> vertices;
     int N_vertices;
@@ -33,3 +36,4 @@ void read_grid(sw &);
 void find_cell_neighbours(sw &);
 void write_results(sw &, int);
 Eigen::Vector3d flux(Eigen::Vector3d, Eigen::Vector3d, Eigen::Vector3d, int);
+Eigen::VectorXd residual(sw &, Eigen::VectorXd &);

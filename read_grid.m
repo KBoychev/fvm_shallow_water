@@ -1,6 +1,5 @@
 function grid = read_grid(grid_file)
     
-
     file=fopen(grid_file,'r');
     
     eps=1e-6;
@@ -191,16 +190,16 @@ function grid = read_grid(grid_file)
         unique_edges(10,i)=r(2);
         unique_edges(11,i)=r(3);
     end
-    
+ 
     grid={};
     grid.N_vertices=N_vertices;
     grid.N_faces=N_faces;
     grid.vertices=vertices;
-    grid.faces=faces;
     grid.faces=faces;
     grid.N_edges=N_unique_edges;
     grid.edges=unique_edges;
     grid.faces_type=faces_type;
     grid.faces_area=faces_area;
     grid.faces_centres=faces_centres;
+   
 end

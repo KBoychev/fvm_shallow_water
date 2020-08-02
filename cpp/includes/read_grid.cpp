@@ -167,7 +167,6 @@ void read_grid(sw &sw)
 
             if (sw.edges[i].cellr == -1)
             {
-
                 sw.cells[sw.edges[i].celll].type = 1;
             }
         }

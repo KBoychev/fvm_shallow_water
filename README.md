@@ -2,13 +2,22 @@
 
 The code solves the shallow water equations for a dam break problem using the finite volume method on an 2D unstructured grid. The cell normals must point in the positive z-direction. Fluxes can be evaluated with the Lax-Friedrichs or Roe methods and the expicit time stepping is performed with the Euler method. The code is for teaching/learning purposes and is not optimised in any way. A C++ and a Matlab version of the code are available.
 
+
+Grid
+
 ![Dam break grid](https://github.com/KBoychev/fvm_shallow_water/blob/master/dam_break_grid.png "Grid")
+
+Water height
 
 ![Dam break water height](https://github.com/KBoychev/fvm_shallow_water/blob/master/dam_break.png "Water height")
 
-<video controls="true" >
-    <source src="https://github.com/KBoychev/fvm_shallow_water/blob/master/dam_break.ogv" type="video/ogg">
-</video>
+Effect of the flux method; Gray surface is Lax-Friedrichs, red is Roe
+
+![Dam break flux method](https://github.com/KBoychev/fvm_shallow_water/blob/master/dam_break_flux_methods.png "Flux method")
+
+Effect of the integration method; Gray surface is Euler, red is Runge-Kutta 2nd order, blue is Runge-Kutta 4th order
+
+![Dam break integration method](https://github.com/KBoychev/fvm_shallow_water/blob/master/dam_break_integration_methods.png "Integration method")
 
 The code solves the following partial differential equation
 
