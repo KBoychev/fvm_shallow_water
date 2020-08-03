@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 		}
 		else
 		{
-			sw.cells[i].Q(0) = 0.5;
+			sw.cells[i].Q(0) = 1;
 			sw.cells[i].Q(1) = 0;
 			sw.cells[i].Q(2) = 0;
 		}
