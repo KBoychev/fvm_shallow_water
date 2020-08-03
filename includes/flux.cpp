@@ -1,6 +1,6 @@
 #include "sw.h"
 
-// Harten's entropy fix
+// Entropy fix
 double entropy_fix(double lambda)
 {
 	double epsilon = 2.0;
@@ -31,7 +31,7 @@ Eigen::Vector3d flux(Eigen::Vector3d Ql, Eigen::Vector3d Qr, Eigen::Vector3d n, 
 	double hl, ul, vl;
 	double hr, ur, vr;
 	double nx, ny, nz;
-	Eigen::Vector3d delta, Fxl, Fxr, Fyl, Fyr, Fl, Fr, F;
+	Eigen::Vector3d delta, Fxl, Fxr, Fyl, Fyr, Fl, Fr, F, w;
 
 	nx = n(0);
 	ny = n(1);
@@ -74,14 +74,13 @@ Eigen::Vector3d flux(Eigen::Vector3d Ql, Eigen::Vector3d Qr, Eigen::Vector3d n, 
 
 	if (riemann_solver == 0)
 	{
-		double c, wl, wr;
-		Eigen::Vector3d w;
-		c = std::sqrt(g * hr);
-		wl = std::abs(ul * nx + vl * ny) + c;
-		wr = std::abs(ur * nx + vr * ny) + c;
-		w = max(wl, wr) * delta;
+		double cl, cr, wl, wr;
 
-		F = 0.5 * (Fl + Fr) + 0.5 * w;
+		cl = std::sqrt(g * hr);
+		cr = std::sqrt(g * hr);
+		wl = std::abs(ul * nx + vl * ny) + cl;
+		wr = std::abs(ur * nx + vr * ny) + cr;
+		w = max(wl, wr) * delta;
 	}
 
 	//Roe flux
@@ -91,7 +90,7 @@ Eigen::Vector3d flux(Eigen::Vector3d Ql, Eigen::Vector3d Qr, Eigen::Vector3d n, 
 	{
 
 		double h, u, v, c, lambda1, lambda2, lambda3;
-		Eigen::Vector3d r1, r2, r3, I1, I2, I3, w;
+		Eigen::Vector3d r1, r2, r3, I1, I2, I3;
 
 		h = 0.5 * (hl + hr);
 		u = (std::sqrt(hl) * ul + std::sqrt(hr) * ur) / (std::sqrt(hl) + std::sqrt(hr));
@@ -135,9 +134,9 @@ Eigen::Vector3d flux(Eigen::Vector3d Ql, Eigen::Vector3d Qr, Eigen::Vector3d n, 
 		r3(2) = v + c * ny;
 
 		w = entropy_fix(lambda1) * I1.dot(delta) * r1 + entropy_fix(lambda2) * I2.dot(delta) * r2 + entropy_fix(lambda3) * I3.dot(delta) * r3;
-
-		F = 0.5 * (Fl + Fr) + 0.5 * w;
 	}
+
+	F = 0.5 * (Fl + Fr) + 0.5 * w;
 
 	return F;
 }
