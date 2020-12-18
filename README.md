@@ -26,9 +26,9 @@ where
 
 ![Vector of conserved variables](https://render.githubusercontent.com/render/math?math=Q=[h,hu,hv]^T "Vector of conserved variables")
 
-![Flux in x-direction](https://render.githubusercontent.com/render/math?math=F_{x}=[hu,hu^2+\frac{1}{2}gh^2,huv]^T "Flux in x-direction")
+![Flux in x-direction](https://render.githubusercontent.com/render/math?math=F_{x}=[hu,hu^2%2B\frac{1}{2}gh^2,huv]^T "Flux in x-direction")
 
-![Flux in y-direction](https://render.githubusercontent.com/render/math?math=F_{y}=[hv,hvu,hv^2+\frac{1}{2}gh^2]^T "Flux in y-direction")
+![Flux in y-direction](https://render.githubusercontent.com/render/math?math=F_{y}=[hv,hvu,hv^2%2B\frac{1}{2}gh^2]^T "Flux in y-direction")
 
 Integrating the partial differential equations with respect to the finite volume V gives
 
@@ -46,15 +46,15 @@ Further simplification leads to
 
 ![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV=-\mathbf{R}=-\int_{S}\mathbf{F}\cdot\mathbf{n}dS)
 
-The flux across the cell faces are approximated with the Roe or Lax-Friedrichs Riemann solvers. The values across the cell are assumed constant which results in a first-order spatial approximation. For higher-order approximation the gradients at each cell center can be calculated and used to reconstruct the values at the cell faces. To avoid spurious oscillations due to discontinuities a limiter must be introduced.
+The flux across the cell faces is approximated with the Roe or Lax-Friedrichs Riemann solvers. The conservative variables are assumed constant over the cell which results in a first-order spatial approximation. For higher-order approximation the gradients at each cell center must be calculated and used to reconstruct the values at the cell faces. To avoid spurious oscillations, due to discontinuities, a limiter must also be introduced.
 
 ![Flux approximation](https://render.githubusercontent.com/render/math?math=\int_{S}\mathbf{F}\cdot\mathbf{n}dS\approx%20F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3})
 
-Forward Euler is used to approximate the time derivative.
+The time derivative is approximated with the forward Euler method. 
 
 ![Time derivative approximation](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV\approx%20\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}V)
 
-The resulting discretised PDE is given by
+The resulting discretised PDE is then given by
 
 ![Discretised shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}=\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3}\right))
 
