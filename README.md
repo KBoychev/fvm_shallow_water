@@ -56,11 +56,11 @@ The time derivative is approximated with the forward Euler method.
 
 The resulting discretised PDE is then given by
 
-![Discretised shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}=\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3}\right))
+![Discretised shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}=-\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3}\right))
 
 An explicit scheme is obtained if the residual is evaluated at the current time level, n.
 
-![Explicit scheme](https://render.githubusercontent.com/render/math?math=\mathbf{Q}^{n%2B1}=\mathbf{Q}^{n}%2B\Delta%20t%20\mathbf{R}(\mathbf{Q}^{n}))
+![Explicit scheme](https://render.githubusercontent.com/render/math?math=\mathbf{Q}^{n%2B1}=\mathbf{Q}^{n}-\Delta%20t%20\mathbf{R}(\mathbf{Q}^{n}))
 
 An implicit scheme is obtained if the residual is evaluated at the next time level, n+1. Since the residual at n+1 is unknown, Taylor series can be used to approximate it. The higher order terms in the Taylor series are neglected. The solution becomes more expensive as one needs to evaluate the derivative of the residual with respect to the vector of conserved variables. The current method uses finite differences to evaluate the Jacobian matrix. 
 
