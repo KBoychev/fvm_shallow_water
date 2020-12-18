@@ -20,7 +20,7 @@ Effect of the integration method; Gray surface is Euler, red is Runge-Kutta 2nd 
 
 The code solves the following partial differential equations
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\partial%20Q}{\partial%20t}%20%2B%20\frac{\partial%20F_{x}}{\partial%20t}%20%2B%20\frac{\partial%20F_{y}}{\partial%20t}=0 "Shallow water PDE")
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\partial%20Q}{\partial%20t}%20%2B%20\frac{\partial%20F_{x}}{\partial%20x}%20%2B%20\frac{\partial%20F_{y}}{\partial%20y}=0 "Shallow water PDE")
 
 where
 
@@ -30,6 +30,23 @@ where
 
 ![Flux in y-direction](https://render.githubusercontent.com/render/math?math=F_{y}=[hv,hvu,hv^2+\frac{1}{2}gh^2]^T "Flux in y-direction")
 
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\frac{\partial%20F_{x}}{\partial%20x}%2B\frac{\partial%20F_{y}}{\partial%20y}dV=0)
+
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\nabla\cdot\mathbf{F}dV=0)
+
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{S}\mathbf{F}\cdot\mathbf{n}dS=0)
+
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV=\mathbf{R}=-\int_{S}\mathbf{F}\cdot\mathbf{n}dS)
+
+![Flux approximation](https://render.githubusercontent.com/render/math?math=\int_{S}\mathbf{F}\cdot\mathbf{n}dS\approx%20F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3})
+
+![Time derivative approximation](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV\approx%20\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}V)
+
+![Discretised shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}=\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3}\right))
+
+![Explicit scheme](https://render.githubusercontent.com/render/math?math=\mathbf{Q}^{n%2B1}=\mathbf{Q}^{n}%2B\Delta%20t%20\mathbf{R}(\mathbf{Q}^{n}))
+
+![Implicit scheme](https://render.githubusercontent.com/render/math?math=\left(\frac{1}{\Delta%20t}\mathbf{I}%2B\frac{\partial\mathbf{R}}{\partial\mathbf{Q}}\right)\Delta\mathbf{Q}=-\mathbf{R}(\mathbf{Q}^{n}))
 
 # Compile
 
