@@ -30,21 +30,39 @@ where
 
 ![Flux in y-direction](https://render.githubusercontent.com/render/math?math=F_{y}=[hv,hvu,hv^2+\frac{1}{2}gh^2]^T "Flux in y-direction")
 
+Integrating the partial differential equations with respect to the finite volume V gives
+
 ![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\frac{\partial%20F_{x}}{\partial%20x}%2B\frac{\partial%20F_{y}}{\partial%20y}dV=0)
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\nabla\cdot\mathbf{F}dV=0)
+which can be simplified to
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{S}\mathbf{F}\cdot\mathbf{n}dS=0)
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\nabla\cdot\mathbf{F}dV=0),
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV=\mathbf{R}=-\int_{S}\mathbf{F}\cdot\mathbf{n}dS)
+Application of the divergence theorem gives
+
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{S}\mathbf{F}\cdot\mathbf{n}dS=0).
+
+Further simplification leads to 
+
+![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV=-\mathbf{R}=-\int_{S}\mathbf{F}\cdot\mathbf{n}dS)
+
+The flux across the cell faces are approximated with the Roe or Lax-Friedrichs Riemann solvers. The values across the cell are assumed constant which results in a first-order spatial approximation. For higher-order approximation the gradients at each cell center can be calculated and used to reconstruct the values at the cell faces. To avoid spurious oscillations due to discontinuities a limiter must be introduced.
 
 ![Flux approximation](https://render.githubusercontent.com/render/math?math=\int_{S}\mathbf{F}\cdot\mathbf{n}dS\approx%20F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3})
 
+Forward Euler is used to approximate the time derivative.
+
 ![Time derivative approximation](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV\approx%20\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}V)
+
+The resulting discretised PDE is given by
 
 ![Discretised shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}=\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3}\right))
 
+An explicit scheme is obtained if the residual is evaluated at the current time level, n.
+
 ![Explicit scheme](https://render.githubusercontent.com/render/math?math=\mathbf{Q}^{n%2B1}=\mathbf{Q}^{n}%2B\Delta%20t%20\mathbf{R}(\mathbf{Q}^{n}))
+
+An implicit scheme is obtained if the residual is evaluated at the next time level, n+1. Since the residual at n+1 is unknown, Taylor series can be used to approximate it. The higher order terms in the Taylor series are neglected. The solution becomes more expensive as one needs to evaluate the derivative of the residual with respect to the vector of conserved variables. The current method uses finite differences to evaluate the Jacobian matrix. 
 
 ![Implicit scheme](https://render.githubusercontent.com/render/math?math=\left(\frac{1}{\Delta%20t}\mathbf{I}%2B\frac{\partial\mathbf{R}}{\partial\mathbf{Q}}\right)\Delta\mathbf{Q}=-\mathbf{R}(\mathbf{Q}^{n}))
 
