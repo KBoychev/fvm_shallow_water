@@ -20,55 +20,55 @@ Effect of the integration method; Gray surface is Euler, red is Runge-Kutta 2nd 
 
 The code solves the following partial differential equations
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\partial%20Q}{\partial%20t}%20%2B%20\frac{\partial%20F_{x}}{\partial%20x}%20%2B%20\frac{\partial%20F_{y}}{\partial%20y}=0 "Shallow water PDE")
+$\frac{\partial Q}{\partial t} + \frac{\partial F_{x}}{\partial x} + \frac{\partial F_{y}}{\partial y}=0$,
 
 where
 
-![Vector of conserved variables](https://render.githubusercontent.com/render/math?math=Q=[h,hu,hv]^T "Vector of conserved variables")
+$Q=[h,hu,hv]^T$,
 
-![Flux in x-direction](https://render.githubusercontent.com/render/math?math=F_{x}=[hu,hu^2%2B\frac{1}{2}gh^2,huv]^T "Flux in x-direction")
+$F_{x}=[hu,hu^2+\frac{1}{2}gh^2,huv]^T$,
 
-![Flux in y-direction](https://render.githubusercontent.com/render/math?math=F_{y}=[hv,hvu,hv^2%2B\frac{1}{2}gh^2]^T "Flux in y-direction")
+$F_{y}=[hv,hvu,hv^2+\frac{1}{2}gh^2]^T$.
 
 Integrating the partial differential equations with respect to the finite volume V gives
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\frac{\partial%20F_{x}}{\partial%20x}%2B\frac{\partial%20F_{y}}{\partial%20y}dV=0)
+$\frac{d}{dt}\int_{V}\mathbf{Q}dV+\int_{V}\frac{\partial F_{x}}{\partial x}+\frac{\partial F_{y}}{\partial y}dV=0$,
 
 which can be simplified to
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{V}\nabla\cdot\mathbf{F}dV=0),
+$\frac{d}{dt}\int_{V}\mathbf{Q}dV+\int_{V}\nabla\cdot\mathbf{F}dV=0$.
 
 Application of the divergence theorem gives
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV%2B\int_{S}\mathbf{F}\cdot\mathbf{n}dS=0).
+$\frac{d}{dt}\int_{V}\mathbf{Q}dV+\int_{S}\mathbf{F}\cdot\mathbf{n}dS=0$.
 
 Further simplification leads to 
 
-![Shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV=-\mathbf{R}=-\int_{S}\mathbf{F}\cdot\mathbf{n}dS)
+$\frac{d}{dt}\int_{V}\mathbf{Q}dV=-\mathbf{R}=-\int_{S}\mathbf{F}\cdot\mathbf{n}dS$.
 
-The flux across the cell faces is approximated with the Roe or Lax-Friedrichs Riemann solvers. The conservative variables are assumed constant over the cell which results in a first-order spatial approximation. For higher-order approximation the gradients at each cell center must be calculated and used to reconstruct the values at the cell faces. To avoid spurious oscillations, due to discontinuities, a limiter must also be introduced.
+The flux across the cell faces is approximated with the Roe or Lax-Friedrichs Riemann solvers. The conservative variables are assumed constant over the cell which results in a first-order spatial approximation. For higher-order approximation, the gradients at each cell centre must be calculated and used to reconstruct the values at the cell faces. To avoid spurious oscillations, due to discontinuities, a limiter must also be introduced.
 
-![Flux approximation](https://render.githubusercontent.com/render/math?math=\int_{S}\mathbf{F}\cdot\mathbf{n}dS\approx%20F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3})
+$\int_{S}\mathbf{F}\cdot\mathbf{n}dS\approx F_{1}(\mathbf{Q},\mathbf{Q_{1}},\mathbf{n_{1}})S_{1}+F_{2}(\mathbf{Q},\mathbf{Q_{2}},\mathbf{n_{2}})S_{2}+F_{3}(\mathbf{Q},\mathbf{Q_{3}},\mathbf{n_{3}})S_{3}$
 
 The time derivative is approximated with the forward Euler method. 
 
-![Time derivative approximation](https://render.githubusercontent.com/render/math?math=\frac{d}{dt}\int_{V}\mathbf{Q}dV\approx%20\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}V)
+$\frac{d}{dt}\int_{V}\mathbf{Q}dV\approx \frac{\mathbf{Q}^{n+1}-\mathbf{Q}^{n}}{\Delta t}V$
 
-The resulting discretised PDE is then given by
+The resulting discretised PDE is then given by:
 
-![Discretised shallow water PDE](https://render.githubusercontent.com/render/math?math=\frac{\mathbf{Q}^{n%2b1}-\mathbf{Q}^{n}}{\Delta%20t}=-\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q}_{1},\mathbf{n}_{1})S_{1}%2BF_{2}(\mathbf{Q},\mathbf{Q}_{2},\mathbf{n}_{2})S_{2}%2BF_{3}(\mathbf{Q},\mathbf{Q}_{3},\mathbf{n}_{3})S_{3}\right))
+$\frac{\mathbf{Q}^{n+1}-\mathbf{Q}^{n}}{\Delta t}=-\mathbf{R}(\mathbf{Q})=-\frac{1}{V}\left(F_{1}(\mathbf{Q},\mathbf{Q_{1}},\mathbf{n_{1}})S_{1}+F_{2}(\mathbf{Q},\mathbf{Q_{2}},\mathbf{n_{2}})S_{2}+F_{3}(\mathbf{Q},\mathbf{Q_{3}},\mathbf{n_{3}})S_{3}\right)$.
 
 An explicit scheme is obtained if the residual is evaluated at the current time level, n.
 
-![Explicit scheme](https://render.githubusercontent.com/render/math?math=\mathbf{Q}^{n%2B1}=\mathbf{Q}^{n}-\Delta%20t%20\mathbf{R}(\mathbf{Q}^{n}))
+$\mathbf{Q}^{n+1}=\mathbf{Q}^{n}-\Delta t \mathbf{R}(\mathbf{Q}^{n})$
 
-An implicit scheme is obtained if the residual is evaluated at the next time level, n+1. Since the residual at n+1 is unknown, Taylor series can be used to approximate it. The higher order terms in the Taylor series are neglected. The solution becomes more expensive as one needs to evaluate the derivative of the residual with respect to the vector of conserved variables. The current method uses finite differences to evaluate the Jacobian matrix. 
+An implicit scheme is obtained if the residual is evaluated at the next time level, n+1. Since the residual at n+1 is unknown, Taylor series can be used to approximate it. The higher-order terms in the Taylor series are neglected. The solution becomes more expensive as one needs to evaluate the derivative of the residual with respect to the vector of conserved variables. The current method uses finite differences to evaluate the Jacobian matrix. 
 
-![Implicit scheme](https://render.githubusercontent.com/render/math?math=\left(\frac{1}{\Delta%20t}\mathbf{I}%2B\frac{\partial\mathbf{R}}{\partial\mathbf{Q}}\right)\Delta\mathbf{Q}=-\mathbf{R}(\mathbf{Q}^{n}))
+$\left(\frac{1}{\Delta t}\mathbf{I}+\frac{\partial\mathbf{R}}{\partial\mathbf{Q}}\right)\Delta\mathbf{Q}=-\mathbf{R}(\mathbf{Q}^{n})$
 
 # Compile
 
-The code requires the Eigen C++ template libary. Download the libary and extract its contents to a folder named Eigen inside the includes folder (includes/Eigen). Once extracted use make to compile the code. The sw_solver binary will be created in the bin folder. 
+The code requires the Eigen C++ template library. Download the library and extract its contents to a folder named Eigen inside the includes folder (includes/Eigen). Once extracted use make to compile the code. The sw_solver binary will be created in the bin folder. 
 
 # Run
 
